@@ -31,11 +31,24 @@ public class OrderService {
         );
 
         orderStorage.put(orderId, order);
-
         log.info("Заказ создан: orderId={}, userId={}, amount={}", orderId, userId, amount);
-
         orderProducer.sendOrder(order);
+        return order;
+    }
 
+    public Order updateStatus(Long orderId, String status) {
+        Order order = orderStorage.get(orderId);
+        if (order == null) {
+            throw new RuntimeException("Заказ не найден: " + orderId);
+        }
+
+        String oldStatus = order.getStatus();
+        order.setStatus(status);
+        orderStorage.put(orderId, order);
+
+        log.info("Статус заказа обновлён: orderId={}, oldStatus={}, newStatus={}",
+                orderId, oldStatus, status);
+        orderProducer.sendStatusUpdate(order);
         return order;
     }
 

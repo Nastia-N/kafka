@@ -34,4 +34,21 @@ public class OrderController {
 
         return ResponseEntity.ok(order);
     }
+
+    @PutMapping("/{orderId}/status")
+    public ResponseEntity<Order> updateStatus(
+            @PathVariable Long orderId,
+            @RequestParam String status) {
+
+        log.info("Запрос на обновление статуса: orderId={}, status={}", orderId, status);
+
+        try {
+            Order order = orderService.updateStatus(orderId, status);
+            return ResponseEntity.ok(order);
+        } catch (RuntimeException e) {
+            log.error("Ошибка обновления статуса: {}", e.getMessage());
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 }

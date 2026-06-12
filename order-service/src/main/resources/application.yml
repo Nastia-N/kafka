@@ -22,3 +22,4 @@ logging:
 kafka:
   topic:
     new-orders: new_orders
+    status-updates: order_status_updates
